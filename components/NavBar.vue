@@ -8,9 +8,9 @@
       <v-app-bar-title>
         <NuxtLink to="/">
           <v-img
-            max-height="75"
+            max-height="100"
             width="300"
-            src="/images/logo.png"
+            src="/images/logo3.png"
             class="align-center"
             to="/"
           ></v-img>
