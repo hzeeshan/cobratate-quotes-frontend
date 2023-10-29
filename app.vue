@@ -10,4 +10,8 @@
 </template>
 
 <script setup>
+const { $userStore } = useNuxtApp();
+onMounted(async () => {
+  await $userStore.checkAuthStatus();
+});
 </script>

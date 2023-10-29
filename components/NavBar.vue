@@ -24,8 +24,10 @@
       <v-toolbar-items v-if="!mobile">
         <v-btn flat to="/" nuxt> Home </v-btn>
         <v-btn flat to="/contact" nuxt> Contact </v-btn>
-        <v-btn flat @click="logout" nuxt v-if="$userStore.id"> Logout </v-btn>
-        <v-btn flat to="/auth/login" nuxt v-if="!$userStore.id"> Login </v-btn>
+        <v-btn flat v-if="$userStore.isLoggedIn" @click="logout" nuxt>
+          Logout
+        </v-btn>
+        <v-btn flat v-else @click="loginWithGoogle" nuxt> Login </v-btn>
 
         <v-btn flat class="switch-theme-btn-padding">
           <v-switch
@@ -65,8 +67,9 @@ import { useTheme, useDisplay } from "vuetify";
 const { $axios } = useNuxtApp();
 const { mobile } = useDisplay();
 const { $userStore } = useNuxtApp();
-const darkIcon = "mdi-theme-light-dark"; // Icon when dark theme is active
-const lightIcon = "mdi-lightbulb-on"; // Icon when light theme is active
+const config = useRuntimeConfig();
+const darkIcon = "mdi-theme-light-dark";
+const lightIcon = "mdi-lightbulb-on";
 const switchTheme = ref(false);
 const theme = useTheme();
 
@@ -83,12 +86,12 @@ const toggleTheme = () => {
   switchTheme.value = theme.global.current.value.dark;
 };
 
+const loginWithGoogle = () => {
+  window.location.href = `${config.public.apiBaseUrl}/login/google`;
+};
+
 const logout = async () => {
-  await $userStore.getToken();
-  await $userStore.logout();
-  navigateTo({
-    path: `/auth/login`,
-  });
+  $userStore.logout();
 };
 </script>
 

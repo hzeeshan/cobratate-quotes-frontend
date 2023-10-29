@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  axios.defaults.withCredentials = false;
+  axios.defaults.withCredentials = true;
 
   if (typeof window !== "undefined") {
     axios.defaults.baseURL = window.location.hostname.includes("localhost")
