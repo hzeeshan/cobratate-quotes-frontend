@@ -20,11 +20,16 @@
                 </v-list-item-title>
               </div>
               <div class="d-flex justify-end pr-6 mt-3">
-                <div class="pr-2 cursor-pointer" @click="copyQuote">
+                <div
+                  class="pr-2 cursor-pointer"
+                  @click="copyQuote(quote.content)"
+                >
                   <v-icon>mdi-content-copy</v-icon>
                 </div>
-                <div class="cursor-pointer">
-                  <v-icon>mdi-heart</v-icon>
+                <div class="cursor-pointer" @click="quoteLiked(quote)">
+                  <v-icon :color="quote.isLikedByUser ? 'red' : 'default'"
+                    >mdi-heart</v-icon
+                  >
                   <span> 123 </span>
                 </div>
               </div>
@@ -35,6 +40,7 @@
       </v-list>
     </div>
 
+    <!-- Display loading icon -->
     <v-row
       v-if="isLoading"
       class="text-center justify-center my-5"
@@ -42,8 +48,28 @@
     >
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </v-row>
+    <!-- Display endOfData message -->
     <div v-if="endOfData" class="end-of-data-message">
       You've seen all the results.
+    </div>
+    <!-- login dialog -->
+    <div class="text-center">
+      <v-dialog v-model="dialog" width="500">
+        <v-card class="pa-6">
+          <div class="text-right">
+            <v-icon @click="dialog = false">mdi-close</v-icon>
+          </div>
+          <v-card-title class="text-center">
+            Sign up to like this quote
+          </v-card-title>
+          <v-card-text class="text-center">
+            <v-btn @click="loginWithGoogle" class="elevation-2" color="primary">
+              <v-icon start>mdi-google</v-icon>
+              Sign in with Google
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </div>
   </v-container>
 </template>
@@ -55,11 +81,14 @@ useSeoMeta({
 });
 
 const { $axios } = useNuxtApp();
+const { $userStore } = useNuxtApp();
+const config = useRuntimeConfig();
 const quotes = ref([]);
 const page = ref(1);
 const isLoading = ref(false);
 const endOfData = ref(false);
 const pageSize = ref(10);
+const dialog = ref(false);
 
 const getQuotesList = async () => {
   isLoading.value = true;
@@ -96,8 +125,30 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", onScroll);
 });
 
-const copyQuote = () => {
-  console.log("copy ...");
+const copyQuote = async (content) => {
+  try {
+    await navigator.clipboard.writeText(content);
+    console.log("Quote copied to clipboard:", content);
+  } catch (err) {
+    console.error("Failed to copy quote: ", err);
+  }
+};
+
+const loginWithGoogle = () => {
+  window.location.href = `${config.public.apiBaseUrl}/login/google`;
+};
+
+const quoteLiked = async (quote) => {
+  if (!$userStore.isLoggedIn) {
+    dialog.value = true;
+  }
+  const quoteId = quote.id;
+  try {
+    const response = await $axios.post(`/api/quotes/${quoteId}/like`);
+    console.log(response);
+  } catch (e) {
+    console.log(e);
+  }
 };
 </script>
 
