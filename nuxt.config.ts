@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       apiBaseUrl: process.env.API_BASE_URL,
       appBaseUrl: process.env.APP_BASE_URL,
 
-      siteUrl: process.env.PUBLIC_SITE_URL || "https://example.com",
+      siteUrl: process.env.PUBLIC_SITE_URL || "https://cobratatequotes.com",
       siteName: "My Site Name",
       siteDescription: "My site description.",
       language: "en",

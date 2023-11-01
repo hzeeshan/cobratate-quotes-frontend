@@ -6,10 +6,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (typeof window !== "undefined") {
     axios.defaults.baseURL = window.location.hostname.includes("localhost")
       ? "http://localhost:8000"
-      : "https://api.example.com";
+      : "https://api.cobratatequotes.com";
   } else {
     // Default to development in SSR context, or make a similar check based on server context
-    axios.defaults.baseURL = "https://api.example.com";
+    axios.defaults.baseURL = "https://api.cobratatequotes.com";
   }
 
   return {
