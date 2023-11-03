@@ -24,13 +24,15 @@
                   class="pr-2 cursor-pointer"
                   @click="copyQuote(quote.content)"
                 >
+                  <v-tooltip activator="parent" location="top">Copy</v-tooltip>
                   <v-icon>mdi-content-copy</v-icon>
                 </div>
-                <div class="cursor-pointer" @click="quoteLiked(quote)">
+
+                <div class="cursor-pointer" @click="toggleQuoteLike(quote)">
                   <v-icon :color="quote.isLikedByUser ? 'red' : 'default'"
                     >mdi-heart</v-icon
                   >
-                  <span> 123 </span>
+                  <!-- <span> {{ quote.liked_by_users_count }} </span> -->
                 </div>
               </div>
             </v-card>
@@ -71,14 +73,18 @@
         </v-card>
       </v-dialog>
     </div>
+    <!-- snackbar -->
+    <Snackbar
+      :modelValue="showSnackbar"
+      :text="snackbarText"
+      :color="snackbarColor"
+      @update:modelValue="showSnackbar = $event"
+    />
   </v-container>
 </template>
 
 <script setup>
-useSeoMeta({
-  title: "My Title",
-  description: "My description",
-});
+useSeoMeta({ title: "My Title", description: "My description" });
 
 const { $axios } = useNuxtApp();
 const { $userStore } = useNuxtApp();
@@ -89,6 +95,9 @@ const isLoading = ref(false);
 const endOfData = ref(false);
 const pageSize = ref(10);
 const dialog = ref(false);
+const showSnackbar = ref(false);
+const snackbarText = ref("");
+const snackbarColor = ref("");
 
 const getQuotesList = async () => {
   isLoading.value = true;
@@ -129,6 +138,8 @@ const copyQuote = async (content) => {
   try {
     await navigator.clipboard.writeText(content);
     console.log("Quote copied to clipboard:", content);
+
+    setSnackbar("Quote copied to clipboard! 📋", "", true);
   } catch (err) {
     console.error("Failed to copy quote: ", err);
   }
@@ -138,17 +149,42 @@ const loginWithGoogle = () => {
   window.location.href = `${config.public.apiBaseUrl}/login/google`;
 };
 
-const quoteLiked = async (quote) => {
+const toggleQuoteLike = async (quote) => {
   if (!$userStore.isLoggedIn) {
     dialog.value = true;
+    return; // exit if the user is not logged in
   }
+
   const quoteId = quote.id;
   try {
-    const response = await $axios.post(`/api/quotes/${quoteId}/like`);
-    console.log(response);
+    if (quote.isLikedByUser) {
+      // If the user has already liked the quote, we'll unlike it
+      const response = await $axios.delete(`/api/quotes/${quoteId}/unlike`);
+      if (response.data.success === true) {
+        setSnackbar("Quote unliked. ❌", "", true);
+      }
+
+      // Update the local state to reflect that the user has unliked the quote
+      quote.isLikedByUser = false;
+    } else {
+      // If the user hasn't liked the quote yet, we'll like it
+      const response = await $axios.post(`/api/quotes/${quoteId}/like`);
+      if (response.data.success === true) {
+        setSnackbar("Quote liked! 🌟", "", true);
+      }
+
+      // Update the local state to reflect that the user has liked the quote
+      quote.isLikedByUser = true;
+    }
   } catch (e) {
     console.log(e);
   }
+};
+
+const setSnackbar = (text, color, visibility) => {
+  snackbarText.value = text;
+  snackbarColor.value = color;
+  showSnackbar.value = visibility;
 };
 </script>
 
