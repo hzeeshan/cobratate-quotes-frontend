@@ -46,15 +46,35 @@
     <v-navigation-drawer app temporary v-model="drawer" v-if="mobile">
       <v-list density="compact" nav>
         <v-list-item
-          v-for="item in navItems"
-          :key="item.title"
-          @click="navigateTo(item.path)"
           class="d-flex align-sm-center"
-          :prepend-icon="item.icon"
+          prepend-icon="mdi-home"
+          @click="navigateTo('/')"
         >
-          <v-list-item-title>
-            {{ item.title }}
-          </v-list-item-title>
+          <v-list-item-title> Home </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          class="d-flex align-sm-center"
+          prepend-icon="mdi-contacts"
+          @click="navigateTo('/contact')"
+        >
+          <v-list-item-title> Contact </v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          v-if="$userStore.isLoggedIn"
+          class="d-flex align-sm-center"
+          prepend-icon="mdi-login"
+          @click="logout"
+        >
+          <v-list-item-title> logout </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          v-else
+          class="d-flex align-sm-center"
+          prepend-icon="mdi-login"
+          @click="loginWithGoogle"
+        >
+          <v-list-item-title> Login </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -64,7 +84,6 @@
 <script setup>
 import { useTheme, useDisplay } from "vuetify";
 
-const { $axios } = useNuxtApp();
 const { mobile } = useDisplay();
 const { $userStore } = useNuxtApp();
 const config = useRuntimeConfig();
@@ -72,7 +91,7 @@ const darkIcon = "mdi-theme-light-dark";
 const lightIcon = "mdi-lightbulb-on";
 const switchTheme = ref(false);
 const theme = useTheme();
-
+const THEME_KEY = "user_theme_preference";
 let drawer = ref(false);
 
 const navItems = [
@@ -82,7 +101,9 @@ const navItems = [
 ];
 
 const toggleTheme = () => {
-  theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
+  const newTheme = theme.global.current.value.dark ? "light" : "dark";
+  theme.global.name.value = newTheme;
+  localStorage.setItem(THEME_KEY, newTheme);
   switchTheme.value = theme.global.current.value.dark;
 };
 
@@ -93,6 +114,14 @@ const loginWithGoogle = () => {
 const logout = async () => {
   $userStore.logout();
 };
+
+onMounted(() => {
+  // Load the theme preference when the component is mounted (client-side)
+  const storedThemePreference = localStorage.getItem(THEME_KEY);
+  if (storedThemePreference) {
+    theme.global.name.value = storedThemePreference;
+  }
+});
 </script>
 
 <style scoped>
