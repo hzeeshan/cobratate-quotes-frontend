@@ -2,7 +2,7 @@
   <v-app>
     <v-container fluid>
       <v-row justify="center" class="centered-content">
-        <v-col class="d-flex justify-center bg-ghostWhite">
+        <v-col class="d-flex justify-center bg-background">
           <v-card class="text-center centered-item pa-5 w-50">
             <v-card-text>
               <div>

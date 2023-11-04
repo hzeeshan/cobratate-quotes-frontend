@@ -2,7 +2,7 @@
   <div>
     <v-app>
       <SeoKit />
-      <NuxtLayout class="bg-ghostWhite">
+      <NuxtLayout class="bg-background">
         <NuxtPage />
       </NuxtLayout>
     </v-app>

@@ -94,12 +94,6 @@ const theme = useTheme();
 const THEME_KEY = "user_theme_preference";
 let drawer = ref(false);
 
-const navItems = [
-  { title: "Home", icon: "mdi-home", path: "/" },
-  { title: "Contact Us", icon: "mdi-contacts", path: "/contact" },
-  { title: "Login", icon: "mdi-login", path: "/auth/login" },
-];
-
 const toggleTheme = () => {
   const newTheme = theme.global.current.value.dark ? "light" : "dark";
   theme.global.name.value = newTheme;
@@ -116,10 +110,17 @@ const logout = async () => {
 };
 
 onMounted(() => {
-  // Load the theme preference when the component is mounted (client-side)
   const storedThemePreference = localStorage.getItem(THEME_KEY);
   if (storedThemePreference) {
     theme.global.name.value = storedThemePreference;
+    switchTheme.value = storedThemePreference === "dark";
+  } else {
+    // If no preference is stored, you can use system preference or default to 'light'
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+    theme.global.name.value = prefersDark ? "dark" : "light";
+    switchTheme.value = prefersDark;
   }
 });
 </script>

@@ -3,20 +3,31 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 export default defineNuxtPlugin((nuxt) => {
-  const myCustomLightTheme = {
+  const customLightTheme = {
     dark: false,
     colors: {
-      background: "#FFFFFF",
+      background: "#f5f5f5",
       surface: "#FFFFFF",
-      primary: "#6200EE",
-      "primary-darken-1": "#3700B3",
+      primary: "#03A9F4",
       secondary: "#424242",
-      "secondary-darken-1": "#018786",
       error: "#B00020",
       info: "#2196F3",
       success: "#4CAF50",
       warning: "#FB8C00",
-      ghostWhite: "#f2f2f2",
+    },
+  };
+
+  const customDarkTheme = {
+    dark: true,
+    colors: {
+      background: "#2E3440",
+      surface: "#3B4252",
+      primary: "#81A1C1",
+      secondary: "#88C0D0",
+      error: "#BF616A",
+      info: "#5E81F4",
+      success: "#A3BE8C",
+      warning: "#EBCB8B",
     },
   };
 
@@ -25,9 +36,10 @@ export default defineNuxtPlugin((nuxt) => {
     components,
     directives,
     theme: {
-      defaultTheme: "myCustomLightTheme",
+      defaultTheme: "light",
       themes: {
-        myCustomLightTheme,
+        light: customLightTheme,
+        dark: customDarkTheme,
       },
     },
   });
