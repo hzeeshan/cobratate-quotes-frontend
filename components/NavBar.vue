@@ -10,7 +10,7 @@
           <v-img
             max-height="100"
             width="300"
-            src="/images/logo3.png"
+            src="/images/logo.png"
             class="align-center"
             to="/"
           ></v-img>

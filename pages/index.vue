@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-useSeoMeta({ title: "My Title", description: "My description" });
+//useSeoMeta({ title: "My Title", description: "My description" });
 
 const { $axios } = useNuxtApp();
 const { $userStore } = useNuxtApp();

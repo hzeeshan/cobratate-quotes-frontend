@@ -14,8 +14,9 @@ export default defineNuxtConfig({
       appBaseUrl: process.env.APP_BASE_URL,
 
       siteUrl: process.env.PUBLIC_SITE_URL || "https://cobratatequotes.com",
-      siteName: "My Site Name",
-      siteDescription: "My site description.",
+      siteName: "Cobra Tate Wisdom - Empowering Quotes Collection",
+      siteDescription:
+        "Dive into the powerful world of Andrew Tate with a curated selection of his most impactful quotes. Engage, discuss, and be inspired on cobratatequotes.com.",
       language: "en",
     },
   },
