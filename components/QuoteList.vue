@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="quote in quotes" :key="quote.id">
+    <div v-for="quote in sanitizedQuotes" :key="quote.id">
       <v-hover v-slot="{ isHovering, props }">
         <v-card
           :elevation="isHovering ? 8 : 1"
@@ -10,8 +10,11 @@
         >
           <div class="d-flex align-center px-5">
             <v-avatar image="/images/avatar.jpg"></v-avatar>
-            <v-list-item-title class="v-list-item-title ml-3">
-              {{ quote.content }}
+
+            <v-list-item-title
+              class="v-list-item-title ml-3"
+              v-html="`${quote.content}`"
+            >
             </v-list-item-title>
           </div>
           <div class="d-flex justify-end pr-6 mt-3">
@@ -25,6 +28,20 @@
                 >mdi-heart</v-icon
               >
               <!-- <span> {{ quote.liked_by_users_count }} </span> -->
+            </div>
+            <div
+              v-if="$userStore.isLoggedIn && $userStore.isAdmin"
+              class="cursor-pointer px-3"
+              @click="navigateTo(`/quote/${quote.id}`)"
+            >
+              <v-icon>mdi-book-edit</v-icon>
+            </div>
+            <div
+              v-if="$userStore.isLoggedIn && $userStore.isAdmin"
+              class="cursor-pointer"
+              @click="handleDeleteQuote(`${quote.id}`)"
+            >
+              <v-icon>mdi-delete</v-icon>
             </div>
           </div>
         </v-card>
@@ -73,16 +90,19 @@
 </template>
 
 <script setup>
+import DOMPurify from "dompurify";
+
 const props = defineProps({
   quotes: Array,
-  hasMore: Boolean, // Indicates if there are more quotes to load
+  hasMore: Boolean,
   loadMoreQuotes: Function,
   showEndOfDataMessage: {
     type: Boolean,
     default: true,
   },
 });
-const emit = defineEmits(["quote-unliked"]);
+
+const emit = defineEmits(["quote-unliked", "quoteDeleted"]);
 const { $userStore } = useNuxtApp();
 const { $axios } = useNuxtApp();
 const config = useRuntimeConfig();
@@ -92,6 +112,27 @@ const snackbarText = ref("");
 const snackbarColor = ref("");
 const dialog = ref(false);
 const endOfData = computed(() => !props.hasMore);
+
+const sanitizedQuotes = computed(() => {
+  return props.quotes.map((quote) => ({
+    ...quote,
+    content: DOMPurify.sanitize(quote.content),
+  }));
+});
+
+const handleDeleteQuote = async (id) => {
+  if (confirm("Are you sure you want to delete this quote?")) {
+    try {
+      const response = await $axios.delete(`/quote/${id}`);
+      if (response.data.success === true) {
+        setSnackbar("Quote deleted successfully ", "", true);
+        location.reload();
+      }
+    } catch (e) {
+      console.error("Error deleting quote:", e);
+    }
+  }
+};
 
 const copyQuote = async (content) => {
   try {
@@ -176,6 +217,11 @@ const toggleQuoteLike = async (quote) => {
 </script>
 
 <style scoped>
+.v-list-item-title {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
 .on-hover {
   /* Your desired styles for the hovered state */
   background-color: rgba(

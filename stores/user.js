@@ -8,7 +8,14 @@ export const useUserStore = defineStore("user", {
     isLoggedIn: false,
     user: null,
     csrfToken: null,
+    roles: [],
   }),
+
+  getters: {
+    isAdmin: (state) => {
+      return state.roles.includes("admin");
+    },
+  },
 
   actions: {
     async checkAuthStatus() {
@@ -26,6 +33,7 @@ export const useUserStore = defineStore("user", {
         // Set the user data if the user is logged in
         if (this.isLoggedIn) {
           this.user = response.data.user;
+          this.roles = response.data.roles;
         } else {
           this.user = null;
         }
@@ -40,6 +48,7 @@ export const useUserStore = defineStore("user", {
         this.isLoggedIn = false;
         this.user = null;
         this.csrfToken = null;
+        this.roles = [];
       } catch (error) {
         console.error("Error during logout:", error);
       }
