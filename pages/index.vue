@@ -3,43 +3,36 @@
     <div>
       <h1 class="py-5">Top Quotes by Andrew Tate</h1>
     </div>
-    <div>
-      <v-list lines="two">
-        <v-list-item v-for="quote in quotes" :key="quote.id" class="px-3">
-          <v-hover v-slot="{ isHovering, props }">
-            <v-card
-              :elevation="isHovering ? 8 : 1"
-              :class="{ 'on-hover': isHovering }"
-              v-bind="props"
-              class="py-5"
-            >
-              <div class="d-flex align-center px-5">
-                <v-avatar image="/images/avatar.jpg"></v-avatar>
-                <v-list-item-title class="v-list-item-title ml-3">
-                  {{ quote.content }}
-                </v-list-item-title>
-              </div>
-              <div class="d-flex justify-end pr-6 mt-3">
-                <div
-                  class="pr-2 cursor-pointer"
-                  @click="copyQuote(quote.content)"
-                >
-                  <v-tooltip activator="parent" location="top">Copy</v-tooltip>
-                  <v-icon>mdi-content-copy</v-icon>
-                </div>
+    <div v-for="quote in quotes" :key="quote.id">
+      <v-hover v-slot="{ isHovering, props }">
+        <v-card
+          :elevation="isHovering ? 8 : 1"
+          :class="{ 'on-hover': isHovering }"
+          v-bind="props"
+          class="py-5 px-3 mt-3"
+        >
+          <div class="d-flex align-center px-5">
+            <v-avatar image="/images/avatar.jpg"></v-avatar>
+            <v-list-item-title class="v-list-item-title ml-3">
+              {{ quote.content }}
+            </v-list-item-title>
+          </div>
+          <div class="d-flex justify-end pr-6 mt-3">
+            <div class="pr-2 cursor-pointer" @click="copyQuote(quote.content)">
+              <v-tooltip activator="parent" location="top">Copy</v-tooltip>
+              <v-icon>mdi-content-copy</v-icon>
+            </div>
 
-                <div class="cursor-pointer" @click="toggleQuoteLike(quote)">
-                  <v-icon :color="quote.isLikedByUser ? 'primary' : 'default'"
-                    >mdi-heart</v-icon
-                  >
-                  <!-- <span> {{ quote.liked_by_users_count }} </span> -->
-                </div>
-              </div>
-            </v-card>
-          </v-hover>
-          <div class="pt-1"></div>
-        </v-list-item>
-      </v-list>
+            <div class="cursor-pointer" @click="toggleQuoteLike(quote)">
+              <v-icon :color="quote.isLikedByUser ? 'primary' : 'default'"
+                >mdi-heart</v-icon
+              >
+              <!-- <span> {{ quote.liked_by_users_count }} </span> -->
+            </div>
+          </div>
+        </v-card>
+      </v-hover>
+      <div class="pt-1"></div>
     </div>
 
     <!-- Display loading icon -->
