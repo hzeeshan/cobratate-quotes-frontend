@@ -32,7 +32,7 @@
       <div class="pt-1"></div>
     </div>
     <!-- Display endOfData message -->
-    <div v-if="endOfData" class="end-of-data-message">
+    <div v-if="endOfData && showEndOfDataMessage" class="end-of-data-message">
       You've seen all the results.
     </div>
     <!-- snackbar -->
@@ -76,8 +76,13 @@
 const props = defineProps({
   quotes: Array,
   hasMore: Boolean, // Indicates if there are more quotes to load
-  loadMoreQuotes: Function, // Function to call when more quotes need to be loaded
+  loadMoreQuotes: Function,
+  showEndOfDataMessage: {
+    type: Boolean,
+    default: true,
+  },
 });
+const emit = defineEmits(["quote-unliked"]);
 const { $userStore } = useNuxtApp();
 const { $axios } = useNuxtApp();
 const config = useRuntimeConfig();
@@ -139,7 +144,7 @@ watch(
 const toggleQuoteLike = async (quote) => {
   if (!$userStore.isLoggedIn) {
     dialog.value = true;
-    return; // exit if the user is not logged in
+    return;
   }
 
   const quoteId = quote.id;
@@ -153,6 +158,7 @@ const toggleQuoteLike = async (quote) => {
 
       // Update the local state to reflect that the user has unliked the quote
       quote.isLikedByUser = false;
+      emit("quote-unliked", quoteId);
     } else {
       // If the user hasn't liked the quote yet, we'll like it
       const response = await $axios.post(`/api/quotes/${quoteId}/like`);

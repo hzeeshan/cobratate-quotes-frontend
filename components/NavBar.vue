@@ -60,7 +60,14 @@
           prepend-icon="mdi-contacts"
           @click="navigateTo('/contact')"
         >
-          <v-list-item-title> Contact </v-list-item-title>
+          <v-list-item-title> Request Feature </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          class="d-flex align-sm-center"
+          prepend-icon="mdi-heart"
+          @click="navigateTo('/user/favourites')"
+        >
+          <v-list-item-title> Request Feature </v-list-item-title>
         </v-list-item>
 
         <v-list-item
