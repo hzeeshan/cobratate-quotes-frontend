@@ -23,7 +23,7 @@
 
       <v-toolbar-items v-if="!mobile">
         <v-btn flat to="/" nuxt> Home </v-btn>
-        <v-btn flat to="/contact" nuxt> Contact </v-btn>
+        <v-btn flat to="/contact" nuxt> Request Feature </v-btn>
         <v-btn flat v-if="$userStore.isLoggedIn" @click="logout" nuxt>
           Logout
         </v-btn>

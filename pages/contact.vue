@@ -87,6 +87,11 @@
   
 
 <script setup>
+useSeoMeta({
+  title: "Request Features - Cobra Tate Quotes",
+  description:
+    "Have suggestions for Cobra Tate Quotes? Request new features, provide feedback, or get in touch with us to shape the future of your favorite quote repository.",
+});
 const { $axios } = useNuxtApp();
 const valid = ref(true);
 let formData = reactive({
