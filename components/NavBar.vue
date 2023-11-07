@@ -72,8 +72,9 @@
           class="d-flex align-sm-center"
           prepend-icon="mdi-heart"
           @click="navigateTo('/user/favourites')"
+          v-if="$userStore.isLoggedIn"
         >
-          <v-list-item-title> Request Feature </v-list-item-title>
+          <v-list-item-title> Favourites </v-list-item-title>
         </v-list-item>
 
         <v-list-item
