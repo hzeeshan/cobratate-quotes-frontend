@@ -23,6 +23,7 @@
 
       <v-toolbar-items v-if="!mobile">
         <v-btn flat to="/" nuxt> Home </v-btn>
+
         <v-btn flat to="/user/favourites" nuxt v-if="$userStore.isLoggedIn">
           Favourites
         </v-btn>
@@ -31,6 +32,11 @@
           Logout
         </v-btn>
         <v-btn flat v-else @click="loginWithGoogle" nuxt> Login </v-btn>
+
+        <v-btn @click="serachDialog = true">
+          <v-icon size="x-large"> mdi-magnify</v-icon>
+          Search
+        </v-btn>
 
         <v-btn flat class="switch-theme-btn-padding">
           <v-switch
@@ -86,8 +92,47 @@
         >
           <v-list-item-title> Login </v-list-item-title>
         </v-list-item>
+        <v-list-item
+          class="d-flex align-sm-center"
+          prepend-icon="mdi-magnify"
+          @click="serachDialog = true"
+        >
+          <v-list-item-title> Search </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    <v-dialog
+      :style="{ width: mobile ? '100%' : '70%' }"
+      v-model="serachDialog"
+      persistent
+    >
+      <v-card>
+        <div>
+          <v-icon class="pa-7" @click="closeSearchDialog">mdi-close</v-icon>
+        </div>
+        <v-card-text class="pt-4">
+          <v-text-field
+            clearable
+            label="Search"
+            variant="outlined"
+            placeholder="Type cobra tate quote"
+            v-model="searchInput"
+            @input="fetchSearchResults"
+            @click:clear="handleClearIconClicked"
+          ></v-text-field>
+        </v-card-text>
+
+        <v-divider></v-divider>
+        <div class="mx-3">
+          <QuoteList :quotes="searchedQuotes" :showEndOfDataMessage="false" />
+        </div>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text="Close" @click="closeSearchDialog"></v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -95,6 +140,7 @@
 import { useTheme, useDisplay } from "vuetify";
 
 const { mobile } = useDisplay();
+const { $axios } = useNuxtApp();
 const { $userStore } = useNuxtApp();
 const config = useRuntimeConfig();
 const darkIcon = "mdi-theme-light-dark";
@@ -103,6 +149,36 @@ const switchTheme = ref(false);
 const theme = useTheme();
 const THEME_KEY = "user_theme_preference";
 let drawer = ref(false);
+const serachDialog = ref(false);
+const searchInput = ref("");
+const searchedQuotes = ref([]);
+
+const fetchSearchResults = async () => {
+  console.log(searchInput.value);
+  if (searchInput.value) {
+    try {
+      const response = await $axios.get(
+        `/api/quotes/search?query=${encodeURIComponent(searchInput.value)}`
+      );
+      searchedQuotes.value = response.data;
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  } else {
+    searchedQuotes.value = [];
+  }
+};
+
+const handleClearIconClicked = () => {
+  searchedQuotes.value = [];
+  searchInput.value = "";
+};
+
+const closeSearchDialog = () => {
+  serachDialog.value = false;
+  searchedQuotes.value = [];
+  searchInput.value = "";
+};
 
 const toggleTheme = () => {
   const newTheme = theme.global.current.value.dark ? "light" : "dark";

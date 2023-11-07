@@ -2,7 +2,10 @@
   <v-container>
     <div class="d-flex justify-space-between align-center py-5">
       <h1>Top Quotes by Andrew Tate</h1>
-      <v-btn color="secondary" @click="navigateTo(`quote/create-new-quote`)"
+      <v-btn
+        color="secondary"
+        v-if="$userStore.isLoggedIn && $userStore.isAdmin"
+        @click="navigateTo(`quote/create-new-quote`)"
         >Add new Quote</v-btn
       >
     </div>
@@ -16,6 +19,7 @@
 </template>
 
 <script setup>
+const { $userStore } = useNuxtApp();
 const { quotes, hasMore, loadMoreQuotes } = useInfiniteQuotes();
 async function fetchData() {
   await loadMoreQuotes();
@@ -23,8 +27,6 @@ async function fetchData() {
 fetchData();
 const removeQuote = (id) => {
   console.log("deleted ..." + id);
-  fetchData();
-  //quotes.value = quotes.value.filter((quote) => quote.id !== id);
 };
 </script>
 
