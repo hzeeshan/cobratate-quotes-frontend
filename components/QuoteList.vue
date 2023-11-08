@@ -24,7 +24,12 @@
             </div>
 
             <div class="cursor-pointer" @click="toggleQuoteLike(quote)">
-              <v-icon :color="quote.isLikedByUser ? 'primary' : 'default'"
+              <v-icon
+                :color="
+                  $userStore.isLoggedIn && quote.isLikedByUser
+                    ? 'primary'
+                    : 'default'
+                "
                 >mdi-heart</v-icon
               >
               <!-- <span> {{ quote.liked_by_users_count }} </span> -->
