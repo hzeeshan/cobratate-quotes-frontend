@@ -9,7 +9,7 @@
         <NuxtLink to="/">
           <v-img
             max-height="100"
-            width="300"
+            :width="mobile ? '250' : '300'"
             src="/images/logo.png"
             class="align-center"
             to="/"
@@ -52,6 +52,7 @@
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
+    <!-- Mobiles -->
     <v-navigation-drawer app temporary v-model="drawer" v-if="mobile">
       <v-list density="compact" nav>
         <v-list-item
@@ -102,6 +103,8 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
+    <!-- Dialog -->
     <v-dialog
       :style="{ width: mobile ? '100%' : '70%' }"
       v-model="serachDialog"
@@ -198,17 +201,10 @@ const logout = async () => {
 
 onMounted(() => {
   const storedThemePreference = localStorage.getItem(THEME_KEY);
-  if (storedThemePreference) {
-    theme.global.name.value = storedThemePreference;
-    switchTheme.value = storedThemePreference === "dark";
-  } else {
-    // If no preference is stored, you can use system preference or default to 'light'
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    theme.global.name.value = prefersDark ? "dark" : "light";
-    switchTheme.value = prefersDark;
-  }
+
+  // Set to 'light' if no stored preference
+  theme.global.name.value = storedThemePreference || "light";
+  switchTheme.value = theme.global.name.value === "dark";
 });
 </script>
 

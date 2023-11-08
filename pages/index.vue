@@ -10,6 +10,7 @@
       >
     </div>
     <QuoteList
+      v-if="quotes.length > 0"
       :quotes="quotes"
       :hasMore="hasMore"
       :loadMoreQuotes="loadMoreQuotes"
