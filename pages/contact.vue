@@ -93,6 +93,7 @@ useSeoMeta({
     "Have suggestions for Cobra Tate Quotes? Request new features, provide feedback, or get in touch with us to shape the future of your favorite quote repository.",
 });
 const { $axios } = useNuxtApp();
+const { $userStore } = useNuxtApp();
 const valid = ref(true);
 let formData = reactive({
   name: ref(""),
@@ -127,6 +128,10 @@ const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
     if (confirm("Confirm ?")) {
+      if (!$userStore.isLoggedIn) {
+        const { data: csrfToken } = await $axios.get("/csrf-token");
+        $axios.defaults.headers.common["X-CSRF-TOKEN"] = csrfToken;
+      }
       try {
         overlay.value = true;
         const res = await $axios.post("/api/contact-form", {
