@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <Head>
-      <Title>Contact Us</Title>
+      <Title>Request Features - Cobra Tate Quotes</Title>
     </Head>
     <v-container fluid class="fill-height">
       <v-row justify="center" align="center">
@@ -9,7 +9,7 @@
           <v-card>
             <v-card-text>
               <div>
-                <h2 class="py-5">Contact Us</h2>
+                <h2 class="py-5">Request Features / Contact Us</h2>
               </div>
               <v-form ref="formRef" v-model="valid">
                 <v-row>
@@ -59,7 +59,7 @@
                 </v-row>
 
                 <v-row class="d-flex justify-start">
-                  <v-btn color="error" class="ml-5"> Reset </v-btn>
+                  <!--  <v-btn color="error" class="ml-5"> Reset </v-btn> -->
                   <v-btn color="primary" @click="submit" class="ml-3 mb-3">
                     Send
                   </v-btn>
@@ -107,7 +107,7 @@ let overlay = ref(false);
 
 const nameRules = [
   (v) => !!v || "Name is required",
-  (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
+  //(v) => (v && v.length <= 10) || "Name must be less than 10 characters",
 ];
 
 const emailRules = [
@@ -126,20 +126,26 @@ const formRef = ref(null);
 const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
-    try {
-      overlay.value = true;
-      const res = await $axios.post("/api/public/contact-form", {
-        data: formData,
-      });
-      console.log(res);
-      if (res.data.success === true) {
-        showSnackbarMessage("Sent successfully ");
-        formReset();
+    if (confirm("Confirm ?")) {
+      try {
+        overlay.value = true;
+        const res = await $axios.post("/api/contact-form", {
+          data: formData,
+        });
+
+        if (res.data.success === true) {
+          showSnackbarMessage(
+            "Your message has been sent successfully. Thank you for reaching out to us!"
+          );
+          formReset();
+        }
+        overlay.value = false;
+      } catch (e) {
+        console.log(e);
+        showSnackbarMessage(
+          "Oops! Something went wrong while sending your message. Please try again"
+        );
       }
-      overlay.value = false;
-    } catch (e) {
-      console.log(e);
-      showSnackbarMessage("There was some error. Please try again later");
     }
   }
 };

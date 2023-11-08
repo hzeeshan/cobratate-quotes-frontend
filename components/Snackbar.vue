@@ -13,7 +13,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
   text: { type: String, default: "" },
   color: { type: String, default: "" },
-  timeout: { type: Number, default: 3000 },
+  timeout: { type: Number, default: 4000 },
 });
 
 const emits = defineEmits(["update:modelValue"]);
