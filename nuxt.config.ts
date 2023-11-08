@@ -4,7 +4,15 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", "@nuxt/image"],
+  modules: [
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@nuxt/image",
+    "nuxt-gtag",
+  ],
+  gtag: {
+    id: "G-1H9HZ8C4S0",
+  },
   extends: ["nuxt-seo-kit"],
   ssr: true,
 
