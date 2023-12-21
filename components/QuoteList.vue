@@ -8,11 +8,11 @@
           v-bind="props"
           class="py-5 px-3 mt-3"
         >
-          <div class="d-flex align-center px-5">
-            <v-avatar image="/images/avatar.jpg"></v-avatar>
+          <div class="d-flex px-3">
+            <v-avatar image="/images/avatar_2.jpg"></v-avatar>
 
             <v-list-item-title
-              class="v-list-item-title ml-3"
+              class="v-list-item-title ml-5"
               v-html="`${quote.content}`"
             >
             </v-list-item-title>

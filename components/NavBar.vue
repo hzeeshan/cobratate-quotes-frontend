@@ -27,6 +27,7 @@
         <v-btn flat to="/user/favourites" nuxt v-if="$userStore.isLoggedIn">
           Favourites
         </v-btn>
+        <v-btn flat to="/fitness-tips" nuxt> Fitness Tips </v-btn>
         <v-btn flat to="/contact" nuxt> Request Feature </v-btn>
         <v-btn flat v-if="$userStore.isLoggedIn" @click="logout" nuxt>
           Logout
@@ -76,6 +77,19 @@
           v-if="$userStore.isLoggedIn"
         >
           <v-list-item-title> Favourites </v-list-item-title>
+        </v-list-item>
+
+        <v-list-item
+          class="d-flex align-sm-center"
+          @click="navigateTo('/fitness-tips')"
+        >
+          <template v-slot:prepend>
+            <Icon icon="mingcute:fitness-fill" class="custom-icon" />
+          </template>
+
+          <v-list-item-title style="padding-left: 30px">
+            Fitness Tips
+          </v-list-item-title>
         </v-list-item>
 
         <v-list-item
@@ -142,6 +156,7 @@
 
 <script setup>
 import { useTheme, useDisplay } from "vuetify";
+import { Icon } from "@iconify/vue";
 
 const { mobile } = useDisplay();
 const { $axios } = useNuxtApp();
@@ -219,5 +234,9 @@ a {
 .switch-theme-btn-padding {
   padding-top: 5px;
   padding-right: 50px;
+}
+.custom-icon {
+  font-size: x-large;
+  color: #7a7a7a;
 }
 </style>

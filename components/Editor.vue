@@ -49,6 +49,7 @@ import Underline from "@tiptap/extension-underline";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import CharacterCount from "@tiptap/extension-character-count";
+import HardBreak from "@tiptap/extension-hard-break";
 
 export default {
   components: {
@@ -233,6 +234,7 @@ export default {
         Underline,
         Subscript,
         Superscript,
+        HardBreak,
         CharacterCount.configure({
           limit: this.maxLimit,
         }),

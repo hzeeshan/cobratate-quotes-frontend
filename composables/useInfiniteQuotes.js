@@ -5,11 +5,13 @@ export default function useInfiniteQuotes() {
   const hasMore = ref(true);
   const isLoading = ref(false);
 
-  const loadMoreQuotes = async () => {
+  const loadMoreQuotes = async (category) => {
     if (isLoading.value) return;
     isLoading.value = true;
     try {
-      const response = await $axios.get(`/api/quotes-list?page=${page.value}`);
+      const response = await $axios.get(
+        `/api/quotes-list?page=${page.value}&category=${category}`
+      );
       //console.log(response.data);
       quotes.value.push(...response.data);
       if (response.data.length === 0) hasMore.value = false;
