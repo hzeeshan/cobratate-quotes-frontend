@@ -57,6 +57,7 @@ const submitQuote = async () => {
         selectdCategory.value = "";
       }
     } catch (error) {
+      setSnackbar(error.response.data.message, "", true);
       console.error("Error submitting quote:", error);
     }
   }
