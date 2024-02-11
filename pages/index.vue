@@ -21,7 +21,7 @@
 
 <script setup>
 const { $userStore } = useNuxtApp();
-const { quotes, hasMore, loadMoreQuotes } = useInfiniteQuotes();
+const { quotes, hasMore, loadMoreQuotes } = useInfiniteQuotes("general");
 async function fetchData() {
   await loadMoreQuotes();
 }

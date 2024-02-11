@@ -1,18 +1,18 @@
-export default function useInfiniteQuotes() {
+export default function useInfiniteQuotes(initialCategory = "general") {
   const { $axios } = useNuxtApp();
   const quotes = ref([]);
   const page = ref(1);
   const hasMore = ref(true);
   const isLoading = ref(false);
+  const category = ref(initialCategory);
 
-  const loadMoreQuotes = async (category) => {
+  const loadMoreQuotes = async () => {
     if (isLoading.value) return;
     isLoading.value = true;
     try {
       const response = await $axios.get(
-        `/api/quotes-list?page=${page.value}&category=${category}`
+        `/api/quotes-list?page=${page.value}&category=${category.value}`
       );
-      //console.log(response.data);
       quotes.value.push(...response.data);
       if (response.data.length === 0) hasMore.value = false;
       page.value++;
@@ -27,5 +27,6 @@ export default function useInfiniteQuotes() {
     quotes,
     hasMore,
     loadMoreQuotes,
+    category,
   };
 }

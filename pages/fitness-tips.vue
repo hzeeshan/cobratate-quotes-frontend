@@ -1,18 +1,28 @@
 <template>
   <div>
     <v-container>
-      <h1>Fitness Tips By Andrew Tate</h1>
+      <div>
+        <h1>Fitness Tips By Andrew Tate</h1>
+      </div>
+
+      <QuoteList
+        v-if="quotes.length > 0"
+        :quotes="quotes"
+        :hasMore="hasMore"
+        :loadMoreQuotes="loadMoreQuotes"
+        @quoteDeleted="removeQuote"
+      />
     </v-container>
   </div>
 </template>
 
 <script setup>
-const { $axios } = useNuxtApp();
-
-const { $userStore } = useNuxtApp();
-const { quotes, hasMore, loadMoreQuotes } = useInfiniteQuotes();
+const { quotes, hasMore, loadMoreQuotes } = useInfiniteQuotes("fitness");
 async function fetchData() {
-  await loadMoreQuotes("fitness");
+  await loadMoreQuotes();
 }
 fetchData();
+const removeQuote = (id) => {
+  console.log("deleted ..." + id);
+};
 </script>
